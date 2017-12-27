@@ -14,7 +14,7 @@ related [Service](https://kubernetes.io/docs/concepts/services-networking/servic
 
 Additional cloud providers herein include:
 
- * Kubernetes [Config options](https://github.com/continuul/go-discover/blob/master/provider/kubernetes/kubernetes_discover.go#L16-L25)
+ * Kubernetes [Config options](https://github.com/continuul/go-discover/blob/master/provider/kubernetes/kubernetes_discover.go#L15-L22)
 
 ### Config Example
 
