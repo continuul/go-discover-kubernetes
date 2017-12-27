@@ -1,0 +1,7 @@
+cmd/discover/discover
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+.idea/
+discover
+

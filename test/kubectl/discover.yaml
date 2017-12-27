@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: discover-pod
+spec:
+  replicas: 1
+  selector:
+  template:
+    metadata:
+      labels:
+        name: discover-pod
+    spec:
+      containers:
+        - name: discover-pod
+          image: continuul.io/discover:latest
+          imagePullPolicy: Never
+          resources:
+            requests:
+              memory: "8Mi"
+              cpu: ".1"
+            limits:
+              memory: "32Mi"
+              cpu: ".25"
+      restartPolicy: Always
