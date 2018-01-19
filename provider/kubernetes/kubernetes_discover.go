@@ -35,6 +35,11 @@ func (p *Provider) Addrs(args map[string]string, l *log.Logger) ([]string, error
     labelKey := args["label_key"]
     labelValue := args["label_value"]
 
+    if namespace == "" {
+		l.Printf("[DEBUG] discover-kubernetes: Namespace type not provided. Using 'default'")
+		namespace = "default"
+	}
+
     l.Printf("[DEBUG] discover-kubernetes: Using namespace=%s label_key=%s label_value=%s", namespace, labelKey, labelValue)
 
     config, err := rest.InClusterConfig()
