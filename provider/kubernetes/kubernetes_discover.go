@@ -15,9 +15,10 @@ type Provider struct{}
 func (p *Provider) Help() string {
     return `Kubernetes:
 
-    provider:  "kubernetes"
-    namespace: The Kubernetes namespace to filter on
-    service:   The Kubernetes service name to filter on
+    provider:     "kubernetes"
+    namespace:    The Kubernetes namespace to filter on
+    label_key:    The Kubernetes label to filter on
+    label_value:  The Kubernetes label value to filter on
 `
 }
 
@@ -31,7 +32,10 @@ func (p *Provider) Addrs(args map[string]string, l *log.Logger) ([]string, error
     }
 
     namespace := args["namespace"]
-    name := args["service"]
+    labelKey := args["label_key"]
+    labelValue := args["label_value"]
+
+    l.Printf("[DEBUG] discover-kubernetes: Using namespace=%s label_key=%s label_value=%s", namespace, labelKey, labelValue)
 
     config, err := rest.InClusterConfig()
     if err != nil {
@@ -42,16 +46,12 @@ func (p *Provider) Addrs(args map[string]string, l *log.Logger) ([]string, error
         return nil, fmt.Errorf("discover-kubernetes: %s", err)
     }
 
-    service, err := client.Core().Services(namespace).Get(name, meta_v1.GetOptions{})
-    if err != nil {
-        return nil, fmt.Errorf("discover-kubernetes: %s", err)
-    }
-
+    l.Printf("[INFO] discover-aws: Select instances with %s=%s", labelKey, labelValue)
     var podIpAddresses []string
-    set := labels.Set(service.Spec.Selector)
-    pods, err := client.Core().Pods(namespace).List(meta_v1.ListOptions{LabelSelector: set.AsSelector().String()})
+    labelsSet := labels.Set(map[string]string{labelKey: labelValue})
+    pods, err := client.Core().Pods(namespace).List(meta_v1.ListOptions{LabelSelector: labelsSet.AsSelector().String()})
     if err != nil {
-        return nil, fmt.Errorf("discover-kubernetes: listing pods of service [%s]: %v", service.GetName(), err)
+        return nil, fmt.Errorf("discover-kubernetes: listing pods with label %s=%s in %s: %v", labelKey, labelValue, namespace, err)
     }
     for _, v := range pods.Items {
         podIpAddresses = append(podIpAddresses, v.Status.PodIP)
