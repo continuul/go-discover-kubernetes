@@ -14,14 +14,13 @@ related [Service](https://kubernetes.io/docs/concepts/services-networking/servic
 
 Additional cloud providers herein include:
 
- * Kubernetes [Config options](https://github.com/continuul/go-discover/blob/master/provider/kubernetes/kubernetes_discover.go#L15-L22)
+ * Kubernetes [Config options](https://github.com/continuul/go-discover-kubernetes/blob/master/provider/kubernetes/kubernetes_discover.go#L15-L22)
 
 ### Config Example
 
-```
+```bash
 # Kubernetes
-provider=kubernetes namespace=default service=demo
-
+provider=kubernetes namespace=mynamespace label_key=role label_value=consul
 ```
 
 ## Command Line Tool Usage
